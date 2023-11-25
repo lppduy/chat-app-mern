@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { BASE_URL, postRequest } from '../utils/services';
 
 export const AuthContext = createContext();
@@ -12,6 +12,14 @@ export const AuthContextProvider = ({ children }) => {
     email: '',
     password: '',
   });
+
+  console.log(user);
+
+  useEffect(() => {
+    const user = localStorage.getItem('User');
+
+    setUser(JSON.parse(user));
+  }, []);
 
   const updateRegisterInfo = useCallback(info => {
     setRegisterInfo(info);
