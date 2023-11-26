@@ -1,7 +1,7 @@
 import { Stack } from 'react-bootstrap';
 import { useFetchRecipient } from '../../hooks/useFetchRecipient';
-import avatar from '../../assets/avatar.svg';
-
+// import avatar from '../../assets/avatar.svg';
+import ava from '../../assets/ava.jpg';
 const UserChat = ({ chat, user }) => {
   const { recipientUser } = useFetchRecipient(chat, user);
 
@@ -15,11 +15,11 @@ const UserChat = ({ chat, user }) => {
     >
       <div className="d-flex">
         <div className="me-2">
-          <img src={avatar} height="35px" />
+          <img src={ava} height="35px" />
         </div>
         <div className="text-content">
           <div className="name">{recipientUser?.name}</div>
-          <div className="text">Text Message</div>
+          <div className="text">Miss you Linh </div>
         </div>
       </div>
       <div className="d-flex flex-column align-items-end">
