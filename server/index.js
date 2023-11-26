@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const userRoute = require('./routes/userRoute');
 const chatRoute = require('./routes/chatRoute');
+const messageRoute = require('./routes/messageRoute');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use('/api/users', userRoute);
 app.use('/api/chats', chatRoute);
+app.use('/api/messages', messageRoute);
 
 app.get('/', (req, res) => {
   res.send('WELCOME OUR CHAT APP APIS...');
