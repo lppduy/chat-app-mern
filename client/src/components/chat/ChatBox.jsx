@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { ChatContext } from '../../context/ChatContext';
 import { useFetchRecipientUser } from '../../hooks/useFetchRecipient';
@@ -16,6 +16,15 @@ const ChatBox = () => {
   const [textMessage, setTextMessage] = useState('');
 
   console.log('text', textMessage);
+
+  // scroll new messages
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   if (!recipientUser)
     return (
@@ -54,6 +63,7 @@ const ChatBox = () => {
               </Stack>
             );
           })}
+        <div ref={messagesEndRef} />
       </Stack>
       <Stack direction="horizontal" gap={3} className="chat-input flex-grow-0">
         <InputEmoji
@@ -62,8 +72,8 @@ const ChatBox = () => {
           fontFamily="nunito"
           borderColor="rba(72,112,223,0.2)"
           onKeyDown={e => {
-            if (e.key === 'Enter') {
-              e.preventDefault(); // Ngăn ngừa việc xuống dòng khi nhấn Enter trong input
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
               sendTextMessage(
                 textMessage,
                 user,
