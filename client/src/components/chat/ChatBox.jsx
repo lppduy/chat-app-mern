@@ -12,18 +12,13 @@ const ChatBox = () => {
     useContext(ChatContext);
   // console.log(messages);
   const { recipientUser } = useFetchRecipientUser(currentChat, user);
-
   const [textMessage, setTextMessage] = useState('');
+  const scroll = useRef();
 
   console.log('text', textMessage);
 
-  // scroll new messages
-  const messagesEndRef = useRef(null);
-
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    scroll.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   if (!recipientUser)
@@ -55,6 +50,7 @@ const ChatBox = () => {
                     ? 'message self align-self-end flex-grow-0'
                     : 'message align-self-start flex-grow-0'
                 }`}
+                ref={scroll}
               >
                 <span>{message.text}</span>
                 <span className="message-footer">
@@ -63,7 +59,6 @@ const ChatBox = () => {
               </Stack>
             );
           })}
-        <div ref={messagesEndRef} />
       </Stack>
       <Stack direction="horizontal" gap={3} className="chat-input flex-grow-0">
         <InputEmoji
