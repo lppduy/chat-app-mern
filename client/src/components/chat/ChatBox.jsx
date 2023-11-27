@@ -61,6 +61,17 @@ const ChatBox = () => {
           onChange={setTextMessage}
           fontFamily="nunito"
           borderColor="rba(72,112,223,0.2)"
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault(); // Ngăn ngừa việc xuống dòng khi nhấn Enter trong input
+              sendTextMessage(
+                textMessage,
+                user,
+                currentChat._id,
+                setTextMessage
+              );
+            }
+          }}
         />
         <button
           className="send-btn"

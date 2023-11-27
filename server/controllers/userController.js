@@ -8,15 +8,48 @@ const createToken = _id => {
   return jwt.sign({ _id }, jwtkey, { expiresIn: '3d' });
 };
 
+const registerUser2 = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    let user = await userModel.findOne({ email });
+    if (user)
+      return res.status(400).json('User with the give email already exist...');
+    if (!name || !email || !password)
+      return res.status(400).json('All fields are required');
+    if (!validator.isEmail(email))
+      return res.status(400).json('Email must be a valid email...');
+    if (!validator.isStrongPassword(password))
+      return res.status(400).json('Password must be a strong password...');
+    user = new userModel({ name, email, password });
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+    await user.save();
+    const token = createToken(user._id);
+    res.status(200).json({ _id: user._id, name, email, token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     let user = await userModel.findOne({ email });
-    if (user) return res.status(400).json('User with the give email already exist...');
-    if (!name || !email || !password) return res.status(400).json('All fields are required');
-    if (!validator.isEmail(email)) return res.status(400).json('Email must be a valid email...');
-    if (!validator.isStrongPassword(password))
-      return res.status(400).json('Password must be a strong password...');
+    if (user)
+      return res
+        .status(400)
+        .json('User with the given email already exists...');
+    if (!name || !email || !password)
+      return res.status(400).json('All fields are required');
+    if (name.length < 3)
+      return res.status(400).json('Name must be at least 3 characters long...');
+    if (!validator.isEmail(email))
+      return res.status(400).json('Email must be a valid email...');
+    if (password.length < 5)
+      return res
+        .status(400)
+        .json('Password must be at least 5 characters long...');
     user = new userModel({ name, email, password });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
@@ -35,7 +68,8 @@ const loginUser = async (req, res) => {
     let user = await userModel.findOne({ email });
     if (!user) return res.status(400).json('Invalid email or password...');
     const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) return res.status(400).json('Invalid email or password...');
+    if (!isValidPassword)
+      return res.status(400).json('Invalid email or password...');
     const token = createToken(user._id);
     res.status(200).json({ _id: user._id, name: user.name, email, token });
   } catch (error) {
