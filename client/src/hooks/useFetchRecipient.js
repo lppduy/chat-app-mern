@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BASE_URL, getRequest } from '../utils/services';
-export const useFetchRecipient = (chat, user) => {
-  //
+export const useFetchRecipientUser = (chat, user) => {
   const [recipientUser, setRecipientUser] = useState(null);
   const [error, setError] = useState(null);
 
@@ -12,14 +11,16 @@ export const useFetchRecipient = (chat, user) => {
       //
       if (!recipientId) return null;
 
-      const response = await getRequest(`${BASE_URL}/users/find/${recipientId}`);
+      const response = await getRequest(
+        `${BASE_URL}/users/find/${recipientId}`
+      );
 
-      if (response.error) return setError(errpr);
+      if (response.error) return setError(response.error);
 
       setRecipientUser(response);
     };
     getUser();
-  }, []);
+  }, [recipientId]);
 
   return { recipientUser };
 };
